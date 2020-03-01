@@ -1,0 +1,146 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558 
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "type": "shell",
+    "tasks": [
+        {
+            "label": "g++ build active file",
+            "linux": {
+                "command": "g++",
+                "args": [
+                    "-I${workspaceFolder}/include", // for header files 
+                    "-L${workspaceFolder}/lib/linux", // for static (.a) 
+                    "-L${workspaceFolder}/bin/linux", // for shared libraries (.so)
+                    "-g",
+                    "${file}",
+                    "-o",
+                    "${fileDirname}/${fileBasenameNoExtension}",
+                    "-lglad",
+                    "-lGLEW",
+                    "-lglfw",
+                    "-lassimp",
+                    "-ldl",
+                ],
+                "options": {
+                    "cwd": "/usr/bin"
+                },
+            },
+            "windows": {
+                "command": "C:\\MinGW\\bin\\g++.exe",
+                "args": [
+                    "-I${workspaceFolder}\\include", // include path for header
+                    "-L${workspaceFolder}\\lib\\wins", // for static (.a or .lib) 
+                    "-L${workspaceFolder}\\bin\\wins", // for shared libraries (.dll)) 
+                    "-g",
+                    "${workspaceFolder}\\glad.c",
+                    "${file}",
+                    "-o",
+                    "${workspaceFolder}\\bin\\wins\\${fileBasenameNoExtension}.exe",
+                    "-lopengl32",
+                    "-lGLEW",
+                    "-lglfw3",
+                    "-lassimp",
+                ],
+                "options": {
+                    "cwd": "C:\\MinGW\\bin"
+                }
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
+            "label": "g++ run active file",
+            "linux": {
+                "command": "${fileDirname}/${fileBasenameNoExtension}"
+            },
+            "windows": {
+                "command": "${workspaceFolder}\\bin\\wins\\${fileBasenameNoExtension}.exe"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+        },
+        {
+            "label": "g++ build & run active file",
+            "linux": {
+                "command": "g++",
+                "args": [
+                    "-I${workspaceFolder}/include", // for header files 
+                    "-L${workspaceFolder}/lib/linux", // for static (.a) 
+                    "-L${workspaceFolder}/bin/linux", // for shared libraries (.so)
+                    "-g",
+                    "${file}",
+                    "-o",
+                    "${fileDirname}/${fileBasenameNoExtension}",
+                    "-lGL",
+                    "-lGLU",
+                    "-lglut",
+                    // "-lglad",
+                    // "-lGLEW",
+                    "-lglfw",
+                    // "-lassimp",
+                    // "-ldl",
+                    "&&",
+                    "${fileDirname}/${fileBasenameNoExtension}"
+                ],
+                "options": {
+                    "cwd": "/usr/bin"
+                },
+            },
+            "windows": {
+                "command": "C:\\MinGW\\bin\\g++.exe",
+                "args": [
+                    "-I${workspaceFolder}\\include", // include path for header
+                    "-L${workspaceFolder}\\lib\\wins", // for static (.a or .lib) 
+                    "-L${workspaceFolder}\\bin\\wins", // for shared libraries (.dll)) 
+                    "-g",
+                    "${workspaceFolder}\\glad.c",
+                    "${file}",
+                    "-o",
+                    "${workspaceFolder}\\bin\\wins\\${fileBasenameNoExtension}.exe",
+                    "-lopengl32",
+                    "-lGLEW",
+                    "-lglfw3",
+                    "-lassimp",
+                    "&&",
+                    "${workspaceFolder}\\bin\\wins\\${fileBasenameNoExtension}.exe"
+                ],
+                "options": {
+                    "cwd": "C:\\MinGW\\bin"
+                }
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        }
+    ]
+}
