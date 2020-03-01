@@ -1,1 +1,1 @@
-# gp-tutorial
+# gp-practical
