@@ -1,0 +1,29 @@
+# exclude everything
+bin/osx/*
+bin/linux/*
+bin/wins/*
+lib/osx/*
+lib/linux/*
+lib/wins/*
+include/*
+model/*
+test
+
+model_loading
+opengl_version
+gipsydanger
+jaeger
+avengers.wav
+
+*.dSYM
+.DS_Store
+
+# exception to the rule
+!bin/osx/.gitkeep 
+!bin/linux/.gitkeep 
+!bin/wins/.gitkeep 
+!lib/osx/.gitkeep 
+!lib/linux/.gitkeep 
+!lib/wins/.gitkeep 
+!include/.gitkeep 
+!model/.gitkeep 

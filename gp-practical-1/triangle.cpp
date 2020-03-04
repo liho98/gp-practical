@@ -1,11 +1,16 @@
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#else
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#endif
 
 // Clears the current window and draws a triangle.
 void display()
 {
-
   // Set every pixel in the frame buffer to the current clear color.
   glClear(GL_COLOR_BUFFER_BIT);
 

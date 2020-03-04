@@ -1,0 +1,258 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558 
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "type": "shell",
+    "tasks": [
+        { 
+            "type": "shell",
+            "label": "g++ build active file",
+            "osx": {
+                "command": "g++",
+                "args": [
+                    "-I${workspaceFolder}/include", // for header files 
+                    "-L${workspaceFolder}/lib/osx", // for static (.a) 
+                    "-L${workspaceFolder}/bin/osx", // for shared libraries (.so)
+                    "-F${workspaceFolder}/bin/osx/Frameworks", // for shared libraries (.so)
+                    "-std=c++11",
+                    "-g",
+                    // "${workspaceFolder}/glad.c",
+                    "${file}",
+                    "-o",
+                    "${fileDirname}/${fileBasenameNoExtension}",
+                    "-lassimp",
+                    "-framework",
+                    "sfml-system",
+                    "-framework",
+                    "sfml-audio",
+                    "-lglfw3",
+                    "-framework",
+                    "Cocoa",
+                    "-framework",
+                    "OpenGL",
+                    "-framework",
+                    "IOKit",
+                    "-framework",
+                    "CoreVideo",
+                    "-Wno-deprecated",
+                    "-ldl",
+                    "&&",
+                    "install_name_tool",
+                    "-id",
+                    "@rpath/libassimp.4.dylib",
+                    "${workspaceFolder}/bin/osx/libassimp.dylib",
+                    "&&",
+                    "install_name_tool",
+                    "-add_rpath",
+                    "${workspaceFolder}/bin/osx",
+                    "${fileDirname}/${fileBasenameNoExtension}",
+                    "&&",
+                    "install_name_tool",
+                    "-add_rpath",
+                    "${workspaceFolder}/bin/osx/Frameworks",
+                    "${fileDirname}/${fileBasenameNoExtension}",
+                ],
+                "options": {
+                    "cwd": "/usr/bin"
+                },
+            },
+            "linux": {
+                "command": "g++",
+                "args": [
+                    "-I${workspaceFolder}/include", // for header files 
+                    "-L${workspaceFolder}/lib/linux", // for static (.a) 
+                    "-L${workspaceFolder}/bin/linux", // for shared libraries (.so)
+                    "-g",
+                    "${file}",
+                    "-o",
+                    "${fileDirname}/${fileBasenameNoExtension}",
+                    "-lglad",
+                    "-lGLEW",
+                    "-lglfw",
+                    "-lassimp",
+                    "-ldl",
+                    "-lglu32",
+                    "-lgdi32",
+                ],
+                "options": {
+                    "cwd": "/usr/bin"
+                },
+            },
+            "windows": {
+                "command": "D:\\MinGW\\bin\\g++.exe",
+                "args": [
+                    "-I${workspaceFolder}\\include", // include path for header
+                    "-L${workspaceFolder}\\lib\\wins", // for static (.a or .lib) 
+                    "-L${workspaceFolder}\\bin\\wins", // for shared libraries (.dll)) 
+                    "-g",
+                    "${workspaceFolder}\\glad.c",
+                    "${file}",
+                    "-o",
+                    "${workspaceFolder}\\bin\\wins\\${fileBasenameNoExtension}.exe",
+                    "-lopengl32",
+                    "-lGLEW",
+                    "-lglfw3",
+                    "-lassimp",
+                    "-lglu32",
+                    "-lgdi32",
+                ],
+                "options": {
+                    "cwd": "D:\\MinGW\\bin"
+                }
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
+            "label": "g++ run active file",
+            "linux": {
+                "command": "${fileDirname}/${fileBasenameNoExtension}"
+            },
+            "windows": {
+                "command": "${workspaceFolder}\\bin\\wins\\${fileBasenameNoExtension}.exe"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+        },
+        {
+            "label": "g++ build & run active file",
+            "type": "shell",
+            "osx": {
+                "command": "g++",
+                "args": [
+                    "-I${workspaceFolder}/include", // for header files 
+                    "-L${workspaceFolder}/lib/osx", // for static (.a) 
+                    "-L${workspaceFolder}/bin/osx", // for shared libraries (.so)
+                    "-F${workspaceFolder}/bin/osx/Frameworks", // for shared libraries (.so)
+                    "-std=c++11",
+                    "-g",
+                    // "${workspaceFolder}/glad.c",
+                    "${file}",
+                    "-o",
+                    "${fileDirname}/${fileBasenameNoExtension}",
+                    "-lassimp",
+                    "-framework",
+                    "sfml-system",
+                    "-framework",
+                    "sfml-audio",
+                    "-lglfw3",
+                    "-framework",
+                    "Cocoa",
+                    "-framework",
+                    "OpenGL",
+                    "-framework",
+                    "IOKit",
+                    "-framework",
+                    "CoreVideo",
+                    "-framework",
+                    "GLUT",
+                    "-Wno-deprecated",
+                    "-ldl",
+                    "&&",
+                    "install_name_tool",
+                    "-id",
+                    "@rpath/libassimp.4.dylib",
+                    "${workspaceFolder}/bin/osx/libassimp.dylib",
+                    "&&",
+                    "install_name_tool",
+                    "-add_rpath",
+                    "${workspaceFolder}/bin/osx",
+                    "${fileDirname}/${fileBasenameNoExtension}",
+                    "&&",
+                    "install_name_tool",
+                    "-add_rpath",
+                    "${workspaceFolder}/bin/osx/Frameworks",
+                    "${fileDirname}/${fileBasenameNoExtension}",
+                    "&&",
+                    "${fileDirname}/${fileBasenameNoExtension}"
+                ],
+                "options": {
+                    "cwd": "/usr/bin"
+                },
+            },
+            "linux": {
+                "command": "g++",
+                "args": [
+                    "-I${workspaceFolder}/include", // for header files 
+                    "-L${workspaceFolder}/lib/linux", // for static (.a) 
+                    "-L${workspaceFolder}/bin/linux", // for shared libraries (.so)
+                    "-Wl,-rpath=${workspaceFolder}/bin/linux",
+                    "-g",
+                    // "${workspaceFolder}/glad.c",
+                    "${file}",
+                    "-o",
+                    "${fileDirname}/${fileBasenameNoExtension}",
+                    "-lGL",
+                    "-lGLU",
+                    "-lGLEW",
+                    "-lglfw",
+                    // "-lglad",
+                    // "-lglu32",
+                    // "-lgdi32",
+                    // "-lglut",
+                    // "-lassimp",
+                    "-lsfml-audio",
+                    "-lsfml-system",
+                    "-ldl",
+                    "&&",
+                    "${fileDirname}/${fileBasenameNoExtension}"
+                ],
+                "options": {
+                    "cwd": "/usr/bin"
+                },
+            },
+            "windows": {
+                "command": "C:\\MinGW\\bin\\g++.exe",
+                "args": [
+                    "-I${workspaceFolder}\\include", // include path for header
+                    "-L${workspaceFolder}\\lib\\wins", // for static (.a or .lib) 
+                    "-L${workspaceFolder}\\bin\\wins", // for shared libraries (.dll)) 
+                    "-g",
+                    // "${workspaceFolder}\\glad.c",
+                    "${file}",
+                    "-o",
+                    "${workspaceFolder}\\bin\\wins\\${fileBasenameNoExtension}.exe",
+                    "-lopengl32",
+                    "-lglew32",
+                    "-lglfw3",
+                    "-lglu32",
+                    "-lmingw32",
+                    "-lsfml-audio-2",
+                    "-lsfml-system-2",
+                    // "-lwinmm",
+                    // "-lgdi32",
+                    // "-lassimp",
+                    // "-lfreeglut", 
+                    "&&",
+                    "${workspaceFolder}\\bin\\wins\\${fileBasenameNoExtension}.exe"
+                ],
+                "options": {
+                    "cwd": "C:\\MinGW\\bin"
+                }
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "never",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        }
+    ]
+}

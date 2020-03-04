@@ -1,12 +1,65 @@
-#include <GL/freeglut.h> // GLUT, include glu.h and gl.h
+// #include <GL/freeglut.h> // GLUT, include glu.h and gl.h
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#endif
 #include <math.h>
 #include <iostream>
-#include <SOIL.h>
+// #include <SOIL/SOIL.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+std::string slash = "\\";
+// get dir path of project root
+std::string file_path = __FILE__;
+std::string dir_path = file_path.substr(0, file_path.rfind("\\"));
+#else
+std::string slash = "/";
+// get dir path of project root
+std::string file_path = __FILE__;
+std::string dir_path = file_path.substr(0, file_path.rfind("/"));
+#endif
+char temp[100];
 
 /* Global variables */
 char title[] = "Practical 1 exercise";
 GLuint texture;
 bool isDrawFlag = true, isDrawAngryBird = false;
+
+void initTexture(std::string textureName)
+{
+    glEnable(GL_TEXTURE_2D);
+    strcpy(temp, dir_path.c_str());
+    strcat(temp, slash.c_str());
+    strcat(temp, textureName.c_str());
+
+    int width, height, nrChannels;
+    unsigned char *data;
+    stbi_set_flip_vertically_on_load(true);
+    data = stbi_load(temp, &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                        GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                        GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    }
+    else
+    {
+        std::cout << "Texture failed to load at path: " << temp << std::endl;
+    }
+    stbi_image_free(data);
+}
 
 float degToRad(float deg)
 {
@@ -255,12 +308,14 @@ void drawAngryBird()
 
     glEnable(GL_TEXTURE_2D);
 
-    texture = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
-        (
-            "/home/liho/Desktop/graphic-programming/gp-practical-1/angry-bird-gb.png",
-            SOIL_LOAD_AUTO,
-            SOIL_CREATE_NEW_ID,
-            SOIL_FLAG_INVERT_Y);
+    initTexture("angry-bird-gb.png");
+
+    // texture = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+    //     (
+    //         "/home/liho/Desktop/graphic-programming",
+    //         SOIL_LOAD_AUTO,
+    //         SOIL_CREATE_NEW_ID,
+    //         SOIL_FLAG_INVERT_Y);
 
     glBindTexture(GL_TEXTURE_2D, texture);
     glBegin(GL_QUADS);
@@ -648,7 +703,7 @@ void SpecialKeyHandler(int key, int x, int y)
     switch (key)
     {
     case GLUT_KEY_F12: /*  Escape key  */
-        glutFullScreenToggle();
+        glutFullScreen();
         break;
     case GLUT_KEY_RIGHT:
         isDrawFlag = !isDrawFlag;
@@ -679,7 +734,7 @@ void NormalKeyHandler(unsigned char key, int x, int y)
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv); // Initialize GLUT
-    glutSetOption(GLUT_MULTISAMPLE, 16);
+    // glutSetOption(GLUT_MULTISAMPLE, 16); //freeglut option
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE); // Enable double buffered mode
     glutInitWindowSize(1920, 1080);                                               // Set the window's initial width & height
     glutInitWindowPosition(0, 0);                                                 // Position the window's initial top-left corner
