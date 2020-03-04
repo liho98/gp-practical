@@ -1,5 +1,15 @@
-#include <GL/freeglut.h> // GLUT, include glu.h and gl.h
+// #include <GL/freeglut.h> // GLUT, include glu.h and gl.h
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#endif
 #include <math.h>
+#include <iostream>
 
 /* Global variables */
 char title[] = "Practical 2 exercise", question = '1';
@@ -182,7 +192,7 @@ void SpecialKeyHandler(int key, int x, int y)
     switch (key)
     {
     case GLUT_KEY_F12: /*  Escape key  */
-        glutFullScreenToggle();
+        glutFullScreen();
         break;
     case GLUT_KEY_LEFT:
         translateXQ1 -= 0.1;
@@ -255,7 +265,7 @@ void NormalKeyHandler(unsigned char key, int x, int y)
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv); // Initialize GLUT
-    glutSetOption(GLUT_MULTISAMPLE, 16);
+    // glutSetOption(GLUT_MULTISAMPLE, 16);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE); // Enable double buffered mode
     glutInitWindowSize(800, 800);                                                 // Set the window's initial width & height
     glutInitWindowPosition(0, 0);                                                 // Position the window's initial top-left corner
