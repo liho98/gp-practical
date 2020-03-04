@@ -1,9 +1,17 @@
-#include <GL/freeglut.h> // GLUT, include glu.h and gl.h
+// #include <GL/freeglut.h> // GLUT, include glu.h and gl.h
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#endif
 #include <math.h>
 #include <iostream>
-
 /* Global variables */
-char title[] = "Practical 2 exercise";
+char title[] = "Practical 3 exercise";
 
 /*  Initialize alpha blending function.  */
 void init(void)
@@ -84,7 +92,7 @@ void SpecialKeyHandler(int key, int x, int y)
     switch (key)
     {
     case GLUT_KEY_F12: /*  Escape key  */
-        glutFullScreenToggle();
+        glutFullScreen();
         break;
     default:
         break;

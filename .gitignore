@@ -9,6 +9,11 @@ include/*
 model/*
 test
 
+test
+triangle
+teapot
+exercise
+practical
 model_loading
 opengl_version
 gipsydanger

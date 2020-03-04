@@ -1,21 +1,68 @@
-#include <GL/freeglut.h> // GLUT, include glu.h and gl.h
+// #include <GL/freeglut.h> // GLUT, include glu.h and gl.h
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#endif
 #include <math.h>
 #include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+std::string slash = "\\";
+// get dir path of project root
+std::string file_path = __FILE__;
+std::string dir_path = file_path.substr(0, file_path.rfind("\\"));
+#else
+std::string slash = "/";
+// get dir path of project root
+std::string file_path = __FILE__;
+std::string dir_path = file_path.substr(0, file_path.rfind("/"));
+#endif
+char temp[100];
 
 /* Global variables */
-char title[] = "Practical 2 exercise", question = '1';
+char title[] = "Practical 3 exercise", question = '1';
 float translateX = 0.0, translateY = 0.0;
 float rAngle = 0.0, speed = 0.0f;
 unsigned ms = 1000;
 float noOfPropeller = 120.0;
 int background = 0;
 
-GLuint texture;
-GLuint *textures = new GLuint[2];
+// GLuint texture;
+GLuint *textures = new GLuint[3];
 int width, height, nrChannels;
+unsigned char *data;
+void initTexture(std::string textureName, GLuint texture)
+{
+    strcpy(temp, dir_path.c_str());
+    strcat(temp, slash.c_str());
+    strcat(temp, textureName.c_str());
+
+    stbi_set_flip_vertically_on_load(true);
+    data = stbi_load(temp, &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                        GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                        GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+    else
+    {
+        std::cout << "Texture failed to load at path: " << temp << std::endl;
+    }
+    stbi_image_free(data);
+}
 
 float degToRad(float deg)
 {
@@ -60,36 +107,39 @@ void init(void)
 
     // set the texture wrapping/filtering options (on the currently bound texture object)
     // load and generate the texture
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load("/home/liho/Desktop/graphic-programming/gp-practical-3/bg.jpg", &width, &height, &nrChannels, 0);
+    // stbi_set_flip_vertically_on_load(true);
+    // unsigned char *data = stbi_load("/home/liho/Desktop/graphic-programming/gp-practical-3/bg.jpg", &width, &height, &nrChannels, 0);
 
-    if (data)
-    {
-        glBindTexture(GL_TEXTURE_2D, textures[0]);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
+    initTexture("bg1.jpg", textures[0]);
+    initTexture("bg2.jpg", textures[1]);
 
-    data = stbi_load("/home/liho/Desktop/graphic-programming/gp-practical-3/1.jpg", &width, &height, &nrChannels, 0);
+    // if (data)
+    // {
+    //     glBindTexture(GL_TEXTURE_2D, textures[0]);
+    //     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    //     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    // }
+    // else
+    // {
+    //     std::cout << "Failed to load texture" << std::endl;
+    // }
+    // stbi_image_free(data);
 
-    if (data)
-    {
-        glBindTexture(GL_TEXTURE_2D, textures[1]);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
+    // data = stbi_load("/home/liho/Desktop/graphic-programming/gp-practical-3/1.jpg", &width, &height, &nrChannels, 0);
+
+    // if (data)
+    // {
+    //     glBindTexture(GL_TEXTURE_2D, textures[1]);
+    //     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    //     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    // }
+    // else
+    // {
+    //     std::cout << "Failed to load texture" << std::endl;
+    // }
+    // stbi_image_free(data);
 }
 
 void drawQ1()
@@ -243,7 +293,7 @@ void SpecialKeyHandler(int key, int x, int y)
     switch (key)
     {
     case GLUT_KEY_F12: /*  Escape key  */
-        glutFullScreenToggle();
+        glutFullScreen();
         break;
     case GLUT_KEY_LEFT:
         translateX -= 0.1;
@@ -330,7 +380,7 @@ void NormalKeyHandler(unsigned char key, int x, int y)
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv); // Initialize GLUT
-    glutSetOption(GLUT_MULTISAMPLE, 4);
+    // glutSetOption(GLUT_MULTISAMPLE, 4);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE); // Enable double buffered mode
     glutInitWindowSize(1920, 1080);                                               // Set the window's initial width & height
     glutInitWindowPosition(0, 0);                                                 // Position the window's initial top-left corner
