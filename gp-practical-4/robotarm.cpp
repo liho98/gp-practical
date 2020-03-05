@@ -15,13 +15,24 @@ static int shoulderAngle = 0, elbowAngle = 0;
 
 // Handles the keyboard event: the left and right arrows bend the elbow, the
 // up and down keys bend the shoulder.
-void special(int key, int, int) {
-  switch (key) {
-    case GLUT_KEY_LEFT: (elbowAngle += 5) %= 360; break;
-    case GLUT_KEY_RIGHT: (elbowAngle -= 5) %= 360; break;
-    case GLUT_KEY_UP: (shoulderAngle += 5) %= 360; break;
-    case GLUT_KEY_DOWN: (shoulderAngle -= 5) %= 360; break;
-    default: return;
+void special(int key, int, int)
+{
+  switch (key)
+  {
+  case GLUT_KEY_LEFT:
+    (elbowAngle += 5) %= 360;
+    break;
+  case GLUT_KEY_RIGHT:
+    (elbowAngle -= 5) %= 360;
+    break;
+  case GLUT_KEY_UP:
+    (shoulderAngle += 5) %= 360;
+    break;
+  case GLUT_KEY_DOWN:
+    (shoulderAngle -= 5) %= 360;
+    break;
+  default:
+    return;
   }
   glutPostRedisplay();
 }
@@ -31,7 +42,8 @@ void special(int key, int, int) {
 // The calls to glPushMatrix and glPopMatrix are essential here; they enable
 // this function to be called from just about anywhere and guarantee that
 // the glScalef call does not pollute code that follows a call to myWireBox.
-void wireBox(GLdouble width, GLdouble height, GLdouble depth) {
+void wireBox(GLdouble width, GLdouble height, GLdouble depth)
+{
   glPushMatrix();
   glScalef(width, height, depth);
   glutWireCube(1.0);
@@ -43,7 +55,8 @@ void wireBox(GLdouble width, GLdouble height, GLdouble depth) {
 // time we call it we are in an "environment" in which a gluLookAt is in
 // effect.  (Note that in particular, replacing glPushMatrix with
 // glLoadIdentity makes you lose the camera setting from gluLookAt).
-void display() {
+void display()
+{
 
   glClear(GL_COLOR_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
@@ -78,26 +91,29 @@ void display() {
 // Handles the reshape event by setting the viewport so that it takes up the
 // whole visible region, then sets the projection matrix to something reason-
 // able that maintains proper aspect ratio.
-void reshape(GLint w, GLint h) {
+void reshape(GLint w, GLint h)
+{
   glViewport(0, 0, w, h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(65.0, GLfloat(w)/GLfloat(h), 1.0, 20.0);
+  gluPerspective(65.0, GLfloat(w) / GLfloat(h), 1.0, 20.0);
 }
 
 // Perfroms application specific initialization: turn off smooth shading,
 // sets the viewing transformation once and for all.  In this application we
 // won't be moving the camera at all, so it makes sense to do this.
-void init() {
+void init()
+{
   glShadeModel(GL_FLAT);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(1,2,8, 0,0,0, 0,1,0);
+  gluLookAt(1, 2, 8, 0, 0, 0, 0, 1, 0);
 }
 
 // Initializes GLUT, the display mode, and main window; registers callbacks;
 // does application initialization; enters the main event loop.
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowPosition(80, 80);

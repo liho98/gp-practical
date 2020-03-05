@@ -3,6 +3,14 @@
 #include <math.h>
 #include <iostream>
 
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
+
 /* Global variables */
 char title[] = "Practical 4 exercise", question = '2';
 bool wireframe = false;
@@ -156,7 +164,8 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
-    // glLoadIdentity();
+    glPushMatrix();
+    glLoadIdentity();
     // glTranslatef(0.0f, 0.0f, 0.0f);
 
     switch (question)
@@ -181,6 +190,15 @@ int main(void)
     /* Initialize the library */
     if (!glfwInit())
         return -1;
+
+//     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+//     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+//     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+//     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+// #ifdef __APPLE__
+//     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+// #endif
 
     glfwWindowHint(GLFW_SAMPLES, 8);
 
@@ -227,6 +245,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
     if (height == 0)
         height = 1; // To prevent divide by 0
+    GLfloat aspect = (GLfloat)width / (GLfloat)height;
 
     // Set the viewport to cover the new window
     glViewport(0, 0, width, height);
@@ -236,7 +255,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
     glLoadIdentity();            // Reset
     // Enable perspective projection with fovy, aspect, zNear and zFar
 
-    gluPerspective(65.0f, (GLfloat)width / (GLfloat)height, 1.0f, 20.0f);
+    gluPerspective(45.0f, aspect, 0.1f, 100.0f);
 }
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)

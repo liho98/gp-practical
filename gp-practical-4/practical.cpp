@@ -63,6 +63,15 @@ int main(void)
     if (!glfwInit())
         return -1;
 
+//     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+//     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+//     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+//     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+// #ifdef __APPLE__
+//     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+// #endif
+
     glfwWindowHint(GLFW_SAMPLES, 8);
 
     /* Create a windowed mode window and its OpenGL context */
@@ -95,7 +104,7 @@ int main(void)
         glMatrixMode(GL_MODELVIEW); // To operate on model-view matrix
 
         glLoadIdentity();
-        glTranslatef(0.0f, 0.0f, -7.0f);
+        // glTranslatef(0.0f, 0.0f, -7.0f);
 
         glRotatef(((sin(glfwGetTime()) / 2.0f) + 0.5) * 360, 1.0f, 1.0f, 1.0f);
 
