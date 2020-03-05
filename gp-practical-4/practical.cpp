@@ -3,6 +3,13 @@
 #include <math.h>
 #include <iostream>
 
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
 /* Global variables */
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
