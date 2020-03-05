@@ -1,8 +1,15 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <math.h>
+#include <iostream>
+
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/gl.h>
 #include <GL/glu.h>
+#endif
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
@@ -14,6 +21,18 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
 void cursorPositionCallback(GLFWwindow *window, double xPos, double yPos);
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+std::string slash = "\\";
+// get dir path of project root
+std::string file_path = __FILE__;
+std::string dir_path = file_path.substr(0, file_path.rfind("\\"));
+#else
+std::string slash = "/";
+// get dir path of project root
+std::string file_path = __FILE__;
+std::string dir_path = file_path.substr(0, file_path.rfind("/"));
+#endif
+char temp[100];
 
 GLuint LoadJpgTexture(const char *filename[], GLuint *texture, int size);
 GLuint LoadPngTexture(const char *filename[], GLuint *texture, int size);
@@ -32,21 +51,20 @@ const unsigned int SCR_HEIGHT = 1080;
 float zoomLevel = -0.3f;
 
 const char *bmpFilenames[] = {
-    "/home/liho/Desktop/graphic-programming/gp-practical-7/res/bmp/Brick.bmp",
-    "/home/liho/Desktop/graphic-programming/gp-practical-7/res/bmp/Box.bmp",
-    "/home/liho/Desktop/graphic-programming/gp-practical-7/res/bmp/Metal.bmp",
-    "/home/liho/Desktop/graphic-programming/gp-practical-7/res/bmp/Wood.bmp",
-    "/home/liho/Desktop/graphic-programming/gp-practical-7/res/bmp/sky.bmp"
-};
+    "res/bmp/Brick.bmp",
+    "res/bmp/Box.bmp",
+    "res/bmp/Metal.bmp",
+    "res/bmp/Wood.bmp",
+    "res/bmp/sky.bmp"};
 const char *jpgFilenames[] = {
-    "/home/liho/Desktop/graphic-programming/gp-practical-7/res/jpg&png/cone.jpg",
-    "/home/liho/Desktop/graphic-programming/gp-practical-7/res/jpg&png/ice-cream-2.jpg",
-    "/home/liho/Desktop/graphic-programming/gp-practical-7/res/jpg&png/grape.jpg",
-    "/home/liho/Desktop/graphic-programming/gp-practical-7/res/jpg&png/chocolate.jpg",
-    "/home/liho/Desktop/graphic-programming/gp-practical-7/res/jpg&png/bg.jpg",
-    "/home/liho/Desktop/graphic-programming/gp-practical-7/res/bmp/sky.jpg"};
+    "res/jpg&png/cone.jpg",
+    "res/jpg&png/ice-cream-2.jpg",
+    "res/jpg&png/grape.jpg",
+    "res/jpg&png/chocolate.jpg",
+    "res/jpg&png/bg.jpg",
+    "res/bmp/sky.jpg"};
 
-const char *pngFilenames[] = {"/home/liho/Desktop/graphic-programming/gp-practical-7/res/jpg&png/tzuyu-coverjpg.png"};
+const char *pngFilenames[] = {"res/jpg&png/tzuyu-coverjpg.png"};
 
 GLuint *bmpTextures = new GLuint[4];
 GLuint *jpgTextures = new GLuint[5];
@@ -90,14 +108,14 @@ int main()
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
-    // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_SAMPLES, 4);
+    //     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    //     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    //     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    //     glfwWindowHint(GLFW_SAMPLES, 4);
 
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
-#endif
+    // #ifdef __APPLE__
+    //     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+    // #endif
 
     // glfw window creation
     // --------------------
@@ -130,9 +148,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // // background texture
 
-
         // // glOrtho(0.0, glfwwid, 0.0, glutGet(GLUT_WINDOW_HEIGHT), -1.0, 1.0);
-
 
         // glBindTexture(GL_TEXTURE_2D, jpgTextures[4]);
         // glBegin(GL_QUADS);
@@ -153,25 +169,22 @@ int main()
         // glPopMatrix();
         // gluLookAt(camera.x, camera.y, camera.z,  lookat.x, lookat.y, lookat.z, 0, 1, 0);
 
-
         glPushMatrix();
         glMatrixMode(GL_MODELVIEW); // To operate on model-view matrix
 
-glPopMatrix();
+        glPopMatrix();
         glLoadIdentity();
-    GLUquadricObj *sphere = NULL;
-    sphere = gluNewQuadric();
-    gluQuadricTexture(sphere, GLU_TRUE);
-    gluQuadricDrawStyle(sphere, GLU_FILL);
-    glBindTexture(GL_TEXTURE_2D, jpgTextures[5]);
-    gluSphere(sphere, 95, 40, 40);
-    gluDeleteQuadric(sphere);
+        GLUquadricObj *sphere = NULL;
+        sphere = gluNewQuadric();
+        gluQuadricTexture(sphere, GLU_TRUE);
+        gluQuadricDrawStyle(sphere, GLU_FILL);
+        glBindTexture(GL_TEXTURE_2D, jpgTextures[5]);
+        gluSphere(sphere, 95, 40, 40);
+        gluDeleteQuadric(sphere);
 
-glBindTexture(GL_TEXTURE_2D, 0);
-glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glPopMatrix();
         glTranslatef(0.0f, 0.0f, zoomLevel);
-
-
 
         display();
         glPopMatrix();
@@ -896,13 +909,18 @@ void drawCube(float size)
 
 GLuint LoadJpgTexture(const char *filename[], GLuint *texture, int size)
 {
+
     // set the texture wrapping/filtering options (on the currently bound texture object)
     // load and generate the texture
     unsigned char *data;
     stbi_set_flip_vertically_on_load(true);
     for (int i = 0; i < size; i++)
     {
-        data = stbi_load(filename[i], &width, &height, &nrChannels, 0);
+        strcpy(temp, dir_path.c_str());
+        strcat(temp, slash.c_str());
+        strcat(temp, filename[i]);
+
+        data = stbi_load(temp, &width, &height, &nrChannels, 0);
         if (data)
         {
             glGenTextures(1, &texture[i]);
@@ -931,7 +949,11 @@ GLuint LoadPngTexture(const char *filename[], GLuint *texture, int size)
     stbi_set_flip_vertically_on_load(true);
     for (int i = 0; i < size; i++)
     {
-        data = stbi_load(filename[i], &width, &height, &nrChannels, 0);
+
+        strcpy(temp, dir_path.c_str());
+        strcat(temp, slash.c_str());
+        strcat(temp, filename[i]);
+        data = stbi_load(temp, &width, &height, &nrChannels, 0);
         if (data)
         {
             glGenTextures(1, &texture[i]);
@@ -960,7 +982,10 @@ GLuint LoadBmpTexture(const char *filename[], GLuint *texture, int size)
     stbi_set_flip_vertically_on_load(true);
     for (int i = 0; i < size; i++)
     {
-        data = stbi_load(filename[i], &width, &height, &nrChannels, 0);
+        strcpy(temp, dir_path.c_str());
+        strcat(temp, slash.c_str());
+        strcat(temp, filename[i]);
+        data = stbi_load(temp, &width, &height, &nrChannels, 0);
         if (data)
         {
             glGenTextures(1, &texture[i]);
@@ -1042,16 +1067,16 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 void processInput(GLFWwindow *window)
 {
 
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-	{
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
         rotateObj[1] = 0.0;
         rotateObj[2] = 1.0;
         rotateObj[3] = 0.0;
 
-		rotateObj[0]  += xPosf - lastX;
-		lastX = xPosf;
-		lastY = yPosf;
-	}    
+        rotateObj[0] += xPosf - lastX;
+        lastX = xPosf;
+        lastY = yPosf;
+    }
     if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
         pyramid = false;
     if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
@@ -1114,15 +1139,15 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 
 void cursorPositionCallback(GLFWwindow *window, double xPos, double yPos)
 {
-	xPosf = xPos;
-	yPosf = yPos;
+    xPosf = xPos;
+    yPosf = yPos;
 }
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 {
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-	{
-		lastX = xPosf;
-		lastY = yPosf;
-	}
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        lastX = xPosf;
+        lastY = yPosf;
+    }
 }

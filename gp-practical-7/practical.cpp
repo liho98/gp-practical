@@ -1,7 +1,15 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <math.h>
+#include <iostream>
+
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -36,8 +44,6 @@ void init()
 
 GLuint LoadTexture(const char *fileName)
 {
-
-
     // set the texture wrapping/filtering options (on the currently bound texture object)
     // load and generate the texture
     stbi_set_flip_vertically_on_load(true);
@@ -209,14 +215,14 @@ int main()
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
-    // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_SAMPLES, 4);
+//     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+//     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+//     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//     glfwWindowHint(GLFW_SAMPLES, 4);
 
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
-#endif
+// #ifdef __APPLE__
+//     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+// #endif
 
     // glfw window creation
     // --------------------
@@ -248,7 +254,7 @@ int main()
         glMatrixMode(GL_MODELVIEW); // To operate on model-view matrix
 
         glLoadIdentity();
-        glTranslatef(0.0f, 0.0f, -7.0f);
+        // glTranslatef(0.0f, 0.0f, -7.0f);
         display();
 
         glfwSwapBuffers(window);

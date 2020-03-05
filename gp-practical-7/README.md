@@ -1,1 +1,0 @@
-# gp-practical-7
